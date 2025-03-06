@@ -5,17 +5,17 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.SagaPropagation;
 import org.apache.camel.saga.CamelSagaService;
 import org.apache.camel.saga.InMemorySagaService;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class SagaRoute extends RouteBuilder {
 
-	@Inject
+	@RestClient
 	OrderService orderService;
 
-	@Inject
+	@RestClient
 	CreditService creditService;
 
 	@Override
@@ -28,7 +28,7 @@ public class SagaRoute extends RouteBuilder {
 		from("direct:saga").saga().propagation(SagaPropagation.REQUIRES_NEW).log("Transaction started")
 			.to("direct:newOrder").log("Order ${header.id} created. Saga ${body}.")
 			.to("direct:newOrderValue").log("Credit for order ${header.id} with value ${header.value} reserved for the saga ${body}")
-			.to("direct:end").log("Done");
+			.to("direct:end").log("Done!");
 
 		// Order service
 		from("direct:newOrder").saga().propagation(SagaPropagation.MANDATORY)

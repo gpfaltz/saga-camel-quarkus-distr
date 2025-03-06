@@ -17,6 +17,7 @@ public class CreditService {
 
 	public void newOrderValue(Long orderId, int value) {
 		if (value > totalCredit) {
+			this.totalCredit = 100; //for the sake of keep testing...
 			throw new IllegalStateException("insufficient funds");
 		}
 
@@ -26,7 +27,7 @@ public class CreditService {
 
 	public void cancelOrderValue(Long id) {
 		System.out.println("OrderValue failed. Starting order cancel...");
-		this.totalCredit = 100; //for the sake of keep testing...
+		//this.totalCredit = 100; //for the sake of keep testing...
 	}
 
 	public int getTotalCredit() {

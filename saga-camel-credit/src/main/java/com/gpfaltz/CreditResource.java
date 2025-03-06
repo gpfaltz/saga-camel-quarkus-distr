@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -17,24 +18,25 @@ public class CreditResource {
 	@GET
 	@Path("newOrderValue")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response newOrderValue(Long orderId, int value) {
+	public Response newOrderValue(@QueryParam("orderId") Long orderId, @QueryParam("value") int value) {
 		try {
 			creditService.newOrderValue(orderId, value);
-			return Response.ok().entity("All good").build();
+			return Response.ok().build();
 		} catch (IllegalStateException e) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity("Something went wrong").build();
+			return Response.status(Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
 
 	@GET
 	@Path("cancelOrderValue")
 	@Produces(MediaType.TEXT_PLAIN)
-	public void cancelOrderValue(Long id) {
+	public void cancelOrderValue(@QueryParam("id") Long id) {
 		creditService.cancelOrderValue(id);
 	}
 
 	@GET
 	@Path("getTotalCredit")
+	@Produces(MediaType.TEXT_PLAIN)
 	public int getTotalCredit() {
 		return creditService.getTotalCredit();
 	}
